@@ -40,7 +40,7 @@
         <!-- 交互按钮 -->
         <div class="action-buttons">
           <button class="btn btn-primary">开始探索</button>
-          <button class="btn btn-secondary">关于我</button>
+          <button class="btn btn-secondary" @click="goToAbout">关于我</button>
         </div>
       </div>
 
@@ -53,7 +53,7 @@
     </div>
 
     <!-- 向下滚动提示 -->
-    <div class="scroll-hint">
+    <div class="scroll-hint" @click="goToAbout">
       <div class="scroll-indicator">
         <div class="wheel"></div>
       </div>
@@ -63,12 +63,56 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
 import '@/styles/BlogHome.css'
+import { transitionName } from '@/utils/transition'
 
+const router = useRouter()
 const title = '欢迎来到我的博客'
 const subtitle = '探索技术的无限可能'
 
 const titleChars = computed(() => title.split(''))
 const subtitleChars = computed(() => subtitle.split(''))
+
+const navigated = ref(false)
+let touchStartY = 0
+
+function goToAbout() {
+  if (navigated.value) return
+  navigated.value = true
+  transitionName.value = 'slide-up'
+  router.push({ name: 'About' })
+}
+
+function onWheel(e: WheelEvent) {
+  if (navigated.value) return
+  if (e.deltaY > 60) {
+    goToAbout()
+  }
+}
+
+function onTouchStart(e: TouchEvent) {
+  touchStartY = e.touches[0]?.clientY || 0
+}
+
+function onTouchEnd(e: TouchEvent) {
+  if (navigated.value) return
+  const endY = (e.changedTouches && e.changedTouches[0]?.clientY) || 0
+  if (touchStartY - endY > 80) {
+    goToAbout()
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('wheel', onWheel, { passive: true })
+  window.addEventListener('touchstart', onTouchStart, { passive: true })
+  window.addEventListener('touchend', onTouchEnd, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('wheel', onWheel)
+  window.removeEventListener('touchstart', onTouchStart)
+  window.removeEventListener('touchend', onTouchEnd)
+})
 </script>
