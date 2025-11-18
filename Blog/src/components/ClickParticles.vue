@@ -26,7 +26,7 @@ function createParticles(x: number, y: number) {
     el.style.height = `${size}px`
     el.style.left = `${x - size / 2}px`
     el.style.top = `${y - size / 2}px`
-    el.style.background = colors[Math.floor(Math.random() * colors.length)]
+    el.style.background = colors[Math.floor(Math.random() * colors.length)]!
 
     const angle = Math.random() * Math.PI * 2
     const dist = 40 + Math.random() * 80
