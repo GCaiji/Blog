@@ -39,7 +39,7 @@
 
         <!-- 交互按钮 -->
         <div class="action-buttons">
-          <button class="btn btn-primary">开始探索</button>
+          <button class="btn btn-primary">深入探索</button>
           <button class="btn btn-secondary" @click="goToAbout">关于我</button>
         </div>
       </div>

@@ -14,7 +14,8 @@
         </p>
 
         <div class="about-actions">
-          <button class="btn btn-primary" @click="goHome">返回主页</button>
+          <button class="btn btn-primary" @click="goToDetails">了解更多</button>
+          <button class="btn btn-secondary" @click="goHome">返回主页</button>
         </div>
       </div>
     </div>
@@ -32,6 +33,13 @@ import profileImg from '@/assets/logos/ProfilePhoto.jpg'
 const router = useRouter()
 const navigated = ref(false)
 let touchStartY = 0
+
+function goToDetails() {
+  if (navigated.value) return
+  navigated.value = true
+  transitionName.value = 'fade'
+  router.push({ name: 'Details' })
+}
 
 function goHome() {
   if (navigated.value) return
