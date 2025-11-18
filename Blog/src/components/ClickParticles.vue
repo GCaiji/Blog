@@ -71,8 +71,9 @@ onBeforeUnmount(() => {
   top: 0;
   right: 0;
   bottom: 0;
-  pointer-events: none;
+  pointer-events: none !important;
   z-index: 9999;
+  touch-action: none;
 }
 
 .cp-particle {
