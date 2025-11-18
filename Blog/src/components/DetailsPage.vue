@@ -59,7 +59,8 @@
               <h3>3D 可视化应用</h3>
               <p class="project-tech">Three.js · WebGL · TypeScript</p>
               <p class="project-desc">
-                使用 Three.js 和 WebGL 创建的交互式 3D 可视化应用，包含模型加载、光照效果和动画系统。
+                使用 Three.js 和 WebGL 创建的交互式 3D
+                可视化应用，包含模型加载、光照效果和动画系统。
               </p>
             </div>
             <div class="project-item">
@@ -113,21 +114,23 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import { transitionName } from '@/utils/transition'
+import { transitionName, canTransition, recordTransition } from '@/utils/transition'
 
 const router = useRouter()
 const navigated = ref(false)
 
 function goBack() {
-  if (navigated.value) return
+  if (navigated.value || !canTransition()) return
   navigated.value = true
+  recordTransition()
   transitionName.value = 'fade'
   router.back()
 }
 
 function goHome() {
-  if (navigated.value) return
+  if (navigated.value || !canTransition()) return
   navigated.value = true
+  recordTransition()
   transitionName.value = 'fade'
   router.push({ name: 'Home' })
 }

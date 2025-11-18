@@ -39,7 +39,7 @@
 
         <!-- 交互按钮 -->
         <div class="action-buttons">
-          <button class="btn btn-primary">深入探索</button>
+          <button class="btn btn-primary" @click="goToExplore">深入探索</button>
           <button class="btn btn-secondary" @click="goToAbout">关于我</button>
         </div>
       </div>
@@ -66,7 +66,7 @@
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import '@/styles/BlogHome.css'
-import { transitionName } from '@/utils/transition'
+import { transitionName, canTransition, recordTransition } from '@/utils/transition'
 
 const router = useRouter()
 const title = '欢迎来到我的博客'
@@ -78,15 +78,24 @@ const subtitleChars = computed(() => subtitle.split(''))
 const navigated = ref(false)
 let touchStartY = 0
 
-function goToAbout() {
-  if (navigated.value) return
+function goToExplore() {
+  if (navigated.value || !canTransition()) return
   navigated.value = true
+  recordTransition()
+  transitionName.value = 'slide-up'
+  router.push({ name: 'Explore' })
+}
+
+function goToAbout() {
+  if (navigated.value || !canTransition()) return
+  navigated.value = true
+  recordTransition()
   transitionName.value = 'slide-up'
   router.push({ name: 'About' })
 }
 
 function onWheel(e: WheelEvent) {
-  if (navigated.value) return
+  if (navigated.value || !canTransition()) return
   if (e.deltaY > 60) {
     goToAbout()
   }
@@ -97,7 +106,7 @@ function onTouchStart(e: TouchEvent) {
 }
 
 function onTouchEnd(e: TouchEvent) {
-  if (navigated.value) return
+  if (navigated.value || !canTransition()) return
   const endY = (e.changedTouches && e.changedTouches[0]?.clientY) || 0
   if (touchStartY - endY > 80) {
     goToAbout()

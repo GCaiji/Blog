@@ -18,6 +18,11 @@ const router = createRouter({
       name: 'Details',
       component: () => import('../components/DetailsPage.vue'),
     },
+    {
+      path: '/explore',
+      name: 'Explore',
+      component: () => import('../components/DeepExplore.vue'),
+    },
   ],
 })
 

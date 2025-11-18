@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
-import { transitionName } from '@/utils/transition'
+import { transitionName, canTransition, recordTransition } from '@/utils/transition'
 import profileImg from '@/assets/logos/ProfilePhoto.jpg'
 
 const router = useRouter()
@@ -35,21 +35,35 @@ const navigated = ref(false)
 let touchStartY = 0
 
 function goToDetails() {
-  if (navigated.value) return
+  if (navigated.value || !canTransition()) return
   navigated.value = true
+  recordTransition()
   transitionName.value = 'fade'
   router.push({ name: 'Details' })
 }
 
-function goHome() {
-  if (navigated.value) return
+function goToExplore() {
+  if (navigated.value || !canTransition()) return
   navigated.value = true
+  recordTransition()
+  transitionName.value = 'slide-up'
+  router.push({ name: 'Explore' })
+}
+
+function goHome() {
+  if (navigated.value || !canTransition()) return
+  navigated.value = true
+  recordTransition()
   transitionName.value = 'slide-down'
   router.push({ name: 'Home' })
 }
 
 function onWheel(e: WheelEvent) {
-  if (navigated.value) return
+  if (navigated.value || !canTransition()) return
+  // deltaY > 60 means wheel down (scrolling down) -> go to Explore
+  if (e.deltaY > 60) {
+    goToExplore()
+  }
   // deltaY < 0 means wheel up (scrolling up) -> go previous (Home)
   if (e.deltaY < -60) {
     goHome()
@@ -61,8 +75,12 @@ function onTouchStart(e: TouchEvent) {
 }
 
 function onTouchEnd(e: TouchEvent) {
-  if (navigated.value) return
+  if (navigated.value || !canTransition()) return
   const endY = (e.changedTouches && e.changedTouches[0]?.clientY) || 0
+  // swipe up (startY - endY > 80) -> goToExplore
+  if (touchStartY - endY > 80) {
+    goToExplore()
+  }
   // swipe down (endY - startY > 80) -> goHome
   if (endY - touchStartY > 80) {
     goHome()
