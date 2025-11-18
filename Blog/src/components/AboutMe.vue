@@ -2,7 +2,15 @@
   <div class="about-me">
     <div class="card">
       <div class="avatar">
-        <img class="avatar-img" :src="profileImg" alt="头像" loading="lazy" />
+        <img
+          class="avatar-img"
+          :src="profileImg"
+          alt="头像"
+          :style="{ opacity: imageLoaded ? 1 : 0 }"
+          @load="imageLoaded = true"
+          @error="imageLoaded = true"
+        />
+        <div v-if="!imageLoaded" class="avatar-placeholder">黄</div>
       </div>
       <div class="about-inner">
         <h2 class="about-title">黄子健</h2>
@@ -32,6 +40,7 @@ import profileImg from '@/assets/logos/ProfilePhoto.jpg'
 
 const router = useRouter()
 const navigated = ref(false)
+const imageLoaded = ref(false)
 let touchStartY = 0
 
 function goToDetails() {
@@ -162,6 +171,8 @@ onBeforeUnmount(() => {
   font-size: 2.2rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
 }
 
 .avatar-img {
@@ -170,6 +181,20 @@ onBeforeUnmount(() => {
   border-radius: 50%;
   object-fit: cover;
   display: block;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.avatar-placeholder {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1b1330;
+  font-weight: 700;
+  font-size: 2.2rem;
 }
 
 .about-inner {
