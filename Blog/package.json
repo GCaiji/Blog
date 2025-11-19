@@ -20,7 +20,9 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
     "@tsparticles/vue3": "^3.0.1",
+    "element-plus": "^2.11.8",
     "pinia": "^3.0.3",
     "tsparticles": "^2.12.0",
     "vue": "^3.5.22",
