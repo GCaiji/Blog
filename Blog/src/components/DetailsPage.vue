@@ -166,10 +166,13 @@
         <!-- 操作按钮 -->
         <div class="action-buttons">
           <button class="btn btn-primary" @click="goHome">返回主页</button>
-          <button class="btn btn-secondary">联系我</button>
+          <button class="btn btn-secondary" @click="showContactModal = true">联系我</button>
         </div>
       </div>
     </div>
+
+    <!-- 联系我弹窗组件 -->
+    <ContactModal v-model="showContactModal" />
   </div>
 </template>
 
@@ -177,9 +180,11 @@
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { transitionName, canTransition, recordTransition } from '@/utils/transition'
+import ContactModal from './ContactModal.vue'
 
 const router = useRouter()
 const navigated = ref(false)
+const showContactModal = ref(false)
 
 function goBack() {
   if (navigated.value || !canTransition()) return
@@ -196,25 +201,22 @@ function goHome() {
   transitionName.value = 'fade'
   router.push({ name: 'Home' })
 }
-
-// 不再拦截全局滚轮/触摸事件，保留原生滚动以便查看全部内容
 </script>
 
 <style scoped>
 .details {
   width: 100%;
-  height: 100vh; /* 固定高度，保证内部滚动生效 */
+  height: 100vh;
   background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
   position: relative;
-  overflow-y: auto; /* 在组件内部开启滚动 */
+  overflow-y: auto;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch; /* 平滑触摸滚动 */
-  overscroll-behavior: contain; /* 防止滚动穿透到父容器 */
-  padding: 80px 20px 120px; /* 底部增加 padding 避免最后一段内容被遮挡 */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 80px 20px 120px;
   box-sizing: border-box;
 }
 
-/* 背景装饰 */
 .bg-decoration {
   position: fixed;
   width: 100%;
@@ -247,7 +249,6 @@ function goHome() {
   left: 5%;
 }
 
-/* 返回按钮 */
 .back-btn {
   position: fixed;
   top: 20px;
@@ -280,7 +281,6 @@ function goHome() {
   transform: scale(0.95);
 }
 
-/* 主容器 */
 .details-container {
   max-width: 900px;
   margin: 0 auto;
@@ -288,7 +288,6 @@ function goHome() {
   z-index: 1;
 }
 
-/* 页面标题 */
 .page-title {
   font-size: 3rem;
   font-weight: 700;
@@ -298,7 +297,6 @@ function goHome() {
   letter-spacing: -0.5px;
 }
 
-/* 内容区域 */
 .details-content {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -308,7 +306,6 @@ function goHome() {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* 部分标题 */
 .section {
   margin-bottom: 50px;
 }
@@ -322,7 +319,6 @@ function goHome() {
   border-bottom: 2px solid rgba(91, 107, 246, 0.3);
 }
 
-/* 技能卡片 */
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -364,7 +360,6 @@ function goHome() {
   line-height: 1.6;
 }
 
-/* 项目列表 */
 .projects-list {
   display: flex;
   flex-direction: column;
@@ -405,7 +400,6 @@ function goHome() {
   line-height: 1.8;
 }
 
-/* 教育背景 */
 .education {
   display: flex;
   flex-direction: column;
@@ -444,7 +438,6 @@ function goHome() {
   line-height: 1.8;
 }
 
-/* 兴趣标签 */
 .interests {
   display: flex;
   flex-wrap: wrap;
@@ -471,12 +464,10 @@ function goHome() {
   transform: translateY(-2px);
 }
 
-/* 最后一个部分 */
 .last-section {
   margin-bottom: 40px;
 }
 
-/* 操作按钮 */
 .action-buttons {
   display: flex;
   gap: 15px;
@@ -520,7 +511,6 @@ function goHome() {
   transform: translateY(-3px);
 }
 
-/* 响应式设计 */
 @media (max-width: 768px) {
   .details {
     padding: 70px 15px 30px;
